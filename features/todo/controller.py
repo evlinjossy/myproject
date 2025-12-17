@@ -1,4 +1,5 @@
 from drf_spectacular.utils import extend_schema
+from features.todo.serializers import request
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -23,9 +24,8 @@ class TodoController:
 
     )
     @api_view(['POST'])
-   
-    def create_item(request: Request) -> Response:
-        todo_data = CreateTodoData(**request.params)
+    def create_item(request: Request) -> Response: 
+        todo_data = CreateTodoData(**request.data) 
         return TodoView().create_todo(params=todo_data.__dict__)
 
     @extend_schema(
@@ -43,10 +43,10 @@ class TodoController:
        
     )
     @api_view(['PUT'])
-    
-    def update_item(request: Request, todo_id: int) -> Response:
-        todo_data = UpdateTodoData(**request.params)
+    def update_item(request, todo_id):
+        todo_data = UpdateTodoData(**request.data)
         return TodoView().update_todo(todo_id=todo_id, params=todo_data.__dict__)
+
 
     @extend_schema(
         description="Delete a Todo item",

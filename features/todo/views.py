@@ -1,7 +1,10 @@
+
 from rest_framework.response import Response
+from rest_framework import status
 from .models import Todo
 from .dataclasses.request.create import CreateTodoData
 from .dataclasses.request.update import UpdateTodoData
+from features.common.Utils import Utils,  todo_data_response
 
 class TodoView:
     data_created = "Todo created successfully"
@@ -16,45 +19,28 @@ class TodoView:
             "due_date": todo_data.due_date,
             "is_completed": todo_data.is_completed
         })
-        response = {
-            "message": self.data_created,
-            "data": {
-                "id": todo.id,
-                "title": todo.title,
-                "description": todo.description,
-                "is_completed": todo.is_completed,
-                "due_date": todo.due_date,
-                "created_at": todo.created_at,
-                "updated_at": todo.updated_at
-            }
-        }
-        return Response(response)
+        return Response(status=status.HTTP_201_CREATED, data=utils.success_response_data(message=self.data_created, data=todo_data_response(todo)))
 
     def update_todo(self, todo_id, params):
-        todo = Todo.objects.filter(id=todo_id).first()
-        if not todo:
-            return Response({"message": "Todo not found"}, status=404)
+        try:
+            todo = Todo.objects.get(id=todo_id)
+        except Todo.DoesNotExist:
+              return Response(
+                {"message": f"Todo with id {todo_id} not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
-        todo_data = UpdateTodoData(**params)
-        todo.update_todo({
-            "title": todo_data.title,
-            "description": todo_data.description,
-            "due_date": todo_data.due_date,
-            "is_completed": todo_data.is_completed
-        })
-        response = {
-            "message": self.data_updated,
-            "data": {
-                "id": todo.id,
-                "title": todo.title,
-                "description": todo.description,
-                "is_completed": todo.is_completed,
-                "due_date": todo.due_date,
-                "created_at": todo.created_at,
-                "updated_at": todo.updated_at
-            }
-        }
-        return Response(response)
+        for key, value in params.items():
+            setattr(todo, key, value)
+
+        todo.save()
+        return Response(
+            status=status.HTTP_200_OK, 
+            data=Utils.success_response_data(
+                message=self.data_updated, 
+                data=todo_data_response(todo)  # use the correct utils function
+            )
+        )
 
     def get_todo(self, todo_id=None):
         if todo_id:
