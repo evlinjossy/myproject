@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crud',
     'rest_framework',
-     'features.todo.apps.TodoConfig',
+    'features.todo.apps.TodoConfig',
+    'features.music_app.apps.MusicAppConfig',
 ]
 
 MIDDLEWARE = [
