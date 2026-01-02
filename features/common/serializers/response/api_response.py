@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-class APiResponseSerializer(serializers.Serializer):
+class ApiResponseSerializer(serializers.Serializer):
     status = serializers.BooleanField()
     message = serializers.CharField()
     data = serializers.JSONField(required=False)

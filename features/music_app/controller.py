@@ -24,10 +24,11 @@ class MusicViewController:
         responses=MusicCreateResponseSerializer
     )
     @api_view(['POST'])
-    @SerializerValidations(serializer=CreateMusicSerializer,
-                           exec_func='MusicView().create_music(request)').validate
+    @SerializerValidations(serializer=CreateMusicSerializer).validate
     def create(request: Request) -> Response:
-        return MusicView().create_music(params=request.params, token_payload=request.payload)
+        params=request.data
+        token_payload=getattr(request,'payload',None)
+        return MusicView().create_music(params=request.data)
 
     @extend_schema(
         description="Get all music records",
@@ -37,7 +38,7 @@ class MusicViewController:
     @api_view(['GET'])
     @SerializerValidations(serializer=GetAllMusicSerializer).validate
     def get_all(request: Request) -> Response:
-        return MusicView().list_music(params=request.params, token_payload=request.payload)
+        return MusicView().list_music(params=request.query_params, token_payload=getattr(request,'payload',None))
 
     @extend_schema(
         description="Get a single music record",
@@ -49,8 +50,8 @@ class MusicViewController:
         music_id = request.query_params.get('music_id')
         if not music_id:
             return Response({"error":"music id is required"}, status=400)
-        return MusicView().retrieve_music(params=request.params, music_id=music_id,
-                                          token_payload=request.payload)
+        return MusicView().retrieve_music(params=request.params, music_id=int(music_id),
+                                          token_payload=getattr(request,'payload',None))
 
     @extend_schema(
         description="Update a music record",
@@ -58,25 +59,23 @@ class MusicViewController:
         responses=MusicUpdateResponseSerializer
     )
     @api_view(['PUT'])
-    @SerializerValidations(serializer=UpdateMusicSerializer,
-                           exec_func='MusicView().update_music(request)').validate
+    @SerializerValidations(serializer=UpdateMusicSerializer).validate
     def update(request: Request) -> Response:
         music_id=request.data.get('music_id')
         if not music_id:
             return Response({"error":"music id is required"}, status=400)
-        return MusicView().update_music(params=request.params, music_id=int(music_id),
-                                        token_payload=request.payload)
+        return MusicView().update_music(params=request.data, music_id=int(music_id),
+                                        token_payload=getattr(request,'payload',None))
 
     @extend_schema(
         description="Delete a music record",
         responses=MusicDeleteResponseSerializer
     )
     @api_view(['DELETE'])
-    @SerializerValidations(serializer=None,
-                           exec_func='MusicView().delete_music(request)').validate
+    @SerializerValidations(serializer=None).validate
     def delete(request: Request) -> Response:
         music_id = request.data.get('music_id')
         if not music_id:
             return Response({"error":"music id is required"}, status=400)
-        return MusicView().delete_music(params=request.params, music_id=music_id,
-                                        token_payload=request.payload)
+        return MusicView().delete_music(params=request.data, music_id=music_id,
+                                        token_payload=getattr(request,'payload',None))

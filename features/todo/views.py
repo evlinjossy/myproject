@@ -3,7 +3,7 @@ from rest_framework import status
 from .models import Todo
 from .dataclasses.request.create import CreateTodoData
 from .dataclasses.request.update import UpdateTodoData
-from features.common.utils import Utils  # only import Utils
+from features.common.Utils import Utils  # only import Utils
 
 class TodoView:
     data_created = "Todo created successfully"

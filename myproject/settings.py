@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'features.todo.apps.TodoConfig',
     'features.music_app.apps.MusicAppConfig',
+    'features.authors.apps.AuthorsConfig',
 ]
 
 MIDDLEWARE = [
