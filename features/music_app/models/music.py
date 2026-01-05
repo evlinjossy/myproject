@@ -18,16 +18,20 @@ class Music(models.Model):
         db_table = "music"
 
     @classmethod
-    def create_music(cls, title:str, author:Author,album:Optional[str]=None,release_date:Optional[date]=None)->int:
-        music=cls(
+    def create_music(
+        cls,
+        title: str,
+        author: Author,
+        album: Optional[str] = None,
+        release_date: Optional[date] = None
+    ):
+        music = cls.objects.create(
             title=title,
             author=author,
             album=album,
-            release_date=release_date,
-            created_at=timezone.now()
+            release_date=release_date
         )
-        music.save()
         return music.music_id
 
-    def __str__(self):
-        return f"{self.title} - {self.author.name}"
+
+        

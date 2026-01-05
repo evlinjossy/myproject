@@ -20,7 +20,7 @@ class Utils:
     # ✅ NEW – FOR PAGINATION (Music / Future apps)
     @staticmethod
     def add_page_parameter(
-        final_data,
+        final_data:list| dict,
         page_num: int,
         total_page: int,
         total_count: int,

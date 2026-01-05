@@ -9,6 +9,7 @@ from features.authors.serializers.request.delete import DeleteAuthorRequestSeria
 
 from features.authors.views import AuthorView
 from features.common.serializer_validations import SerializerValidations
+from features.authors.serializers.request.get import AuthorGetSerializer
 
 
 class AuthorViewController:
@@ -21,25 +22,24 @@ class AuthorViewController:
     ).validate
     def create(request: Request) -> Response:
         return AuthorView().create_extract(
-            params=request.data,  # <-- changed from request.params
-            token_payload=getattr(request, "payload", None),
+            params=request.params,  
+            # token_payload=request.payload
         )
 
     @api_view(["GET"])
+    @SerializerValidations(serializer=GetAllAuthorSerializer).validate
     def get_all(request: Request) -> Response:
         return AuthorView().get_all_extract(
-            params=request.query_params,  # <-- changed from request.params
-            token_payload=getattr(request, "payload", None),
+            params=request.params,  
+            # token_payload=request.payload,
         )
 
     @api_view(["GET"])
-    @SerializerValidations(
-        serializer=GetAllAuthorSerializer,  # or GetAuthorSerializer if you have one
-    ).validate
+    @SerializerValidations(serializer=AuthorGetSerializer).validate
     def get(request: Request) -> Response:
         return AuthorView().get_extract(
-            params=request.query_params,  # <-- changed from request.params
-            token_payload=getattr(request, "payload", None),
+            params=request.params,  
+            # token_payload=request.payload
         )
 
     @api_view(["PUT"])
@@ -49,8 +49,8 @@ class AuthorViewController:
     ).validate
     def update(request: Request) -> Response:
         return AuthorView().update_extract(
-            params=request.data,  # <-- changed from request.params
-            token_payload=getattr(request, "payload", None),
+            params=request.params,  
+            # token_payload=request.payload,
         )
 
     @api_view(["DELETE"])
@@ -60,6 +60,6 @@ class AuthorViewController:
     ).validate
     def delete(request: Request) -> Response:
         return AuthorView().delete_extract(
-            params=request.data,  # <-- changed from request.params
-            token_payload=getattr(request, "payload", None),
+            params=request.params,  
+            # token_payload=request.payload,
         )
