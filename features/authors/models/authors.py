@@ -33,8 +33,7 @@ class Author(models.Model):
     
     @staticmethod
     def update_author(
-        author_id: int, name: str, age: int, language: str, country: str,
-    ):
+        author_id: int, name: str, age: int, language: str, country: str,):
         authorr=Author.objects.filter(
             author_id=author_id, is_active=True
         ).first()

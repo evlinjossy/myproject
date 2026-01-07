@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'features.music_app.apps.MusicAppConfig',
     'features.authors.apps.AuthorsConfig',
     'django_filters',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
